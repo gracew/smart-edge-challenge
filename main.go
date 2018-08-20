@@ -1,12 +1,28 @@
-// codechallenge is a dummy program used to demonstrate proper docker usage
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"os"
 
+	"github.com/gracew/smart-edge-challenge/signature"
+)
+
+// Accepts a string input of up to 250 characters and generates a signature using the SHA256 digest of the input. Prints
+// the original input, the signature, and a public key that may be used to verify the signature. The function will
+// terminate if a string longer than 250 characters is provided.
 func main() {
-	fmt.Println(`{ 
-    "message":"theAnswerIs42",
-    "signature":"MGUCMCDwlFyVdD620p0hRLtABoJTR7UNgwj8g2r0ipNbWPi4Us57YfxtSQJ3dAkHslyBbwIxAKorQmpWl9QdlBUtACcZm4kEXfL37lJ+gZ/hANcTyuiTgmwcEC0FvEXY35u2bKFwhA==",
-    "pubkey":"-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEI5/0zKsIzou9hL3ZdjkvBeVZFKpDwxTb\nfiDVjHpJdu3+qOuaKYgsLLiO9TFfupMYHLa20IqgbJSIv/wjxANH68aewV1q2Wn6\nvLA3yg2mOTa/OHAZEiEf7bVEbnAov+6D\n-----END PUBLIC KEY-----\n"
-}`)
+	if len(os.Args) <= 2 {
+		fmt.Println("Program requires one argument.")
+		os.Exit(0)
+	}
+
+	input := os.Args[1]
+	if len(input) > 250 {
+		fmt.Println("Input must be less than 250 characters long.")
+		os.Exit(0)
+	}
+
+	signed := signature.SignInput(input, signature.GetKey())
+	fmt.Println(json.Marshal(signed))
 }
