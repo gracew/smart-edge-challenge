@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: golang:1.10
+    working_directory: /go/src/github.com/gracew/smart-edge-challenge
     steps:
       - checkout
-      - run: echo "Hello world"
+      - run: go test -v ./...
