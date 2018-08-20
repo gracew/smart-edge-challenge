@@ -3,7 +3,7 @@
 FROM golang:1.10
 
 # Project URI based on repository URL 
-ENV PROJECT_URI=github.com/smartedge/codechallenge
+ENV PROJECT_URI=github.com/gracew/smart-edge-challenge
 ENV PROJECT_DIR=${GOPATH}/src/${PROJECT_URI}
 
 # Create project directory
@@ -22,4 +22,7 @@ RUN go install ${PROJECT_URI}/...
 # this case, we utilize the shell to enable variable substitution for the
 # GOPATH variable (for more info, refer to Docker's documentation:
 # https://docs.docker.com/engine/reference/builder/#shell-form-entrypoint-example) 
-ENTRYPOINT ["sh", "-c", "$GOPATH/bin/codechallenge"]
+ENTRYPOINT ["sh", "-c", "$GOPATH/bin/smart-edge-challenge $0"]
+
+# Override the command from golang image
+CMD [""]
