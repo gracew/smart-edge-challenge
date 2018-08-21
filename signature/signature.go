@@ -30,7 +30,7 @@ func SignInput(input string, privateKey *rsa.PrivateKey) SignedIdentifier {
 	h.Write([]byte(input))
 	sig, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, h.Sum(nil))
 	if err != nil {
-		log.Fatalf("unable to sign message: %v", err)
+		log.Panicf("unable to sign message: %v", err)
 	}
 
 	pemBytes := pem.EncodeToMemory(&pem.Block{

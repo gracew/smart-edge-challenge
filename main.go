@@ -27,7 +27,7 @@ func main() {
 	signed := signature.SignInput(input, signature.GetKey())
 	jsonBytes, err := json.Marshal(signed)
 	if err != nil {
-		log.Fatalf("unable to marshal json represention of SignedIdentifier: %v", err)
+		log.Panicf("unable to marshal json represention of SignedIdentifier: %v", err)
 	}
 	fmt.Println(string(jsonBytes))
 }

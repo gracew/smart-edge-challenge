@@ -18,14 +18,14 @@ const privateKeyFilename = "private.pem"
 func GetKey() *rsa.PrivateKey {
 	exe, err := os.Executable()
 	if err != nil {
-		log.Fatalf("could not determine path of executable: %v", err)
+		log.Panicf("could not determine path of executable: %v", err)
 	}
 	exeDir := filepath.Dir(exe)
 	keyFilepath := filepath.Join(exeDir, "var", "data", privateKeyFilename)
 	if _, err := os.Stat(keyFilepath); os.IsNotExist(err) {
 		key, err := rsa.GenerateKey(rand.Reader, 2048)
 		if err != nil {
-			log.Fatalf("could not generate RSA key: %v", err)
+			log.Panicf("could not generate RSA key: %v", err)
 		}
 		encodeKey(key, keyFilepath)
 		return key
@@ -38,11 +38,11 @@ func GetKey() *rsa.PrivateKey {
 func encodeKey(key *rsa.PrivateKey, filename string) {
 	err := os.MkdirAll(filepath.Dir(filename), os.ModePerm)
 	if err != nil {
-		log.Fatalf("could not make parent directories for file %s: %v", filename, err)
+		log.Panicf("could not make parent directories for file %s: %v", filename, err)
 	}
 	pemfile, err := os.Create(filename)
 	if err != nil {
-		log.Fatalf("could not create file %s: %v", filename, err)
+		log.Panicf("could not create file %s: %v", filename, err)
 	}
 	defer pemfile.Close()
 
@@ -51,7 +51,7 @@ func encodeKey(key *rsa.PrivateKey, filename string) {
 		Bytes: x509.MarshalPKCS1PrivateKey(key),
 	})
 	if err != nil {
-		log.Fatalf("could not write key to file %s: %v", filename, err)
+		log.Panicf("could not write key to file %s: %v", filename, err)
 	}
 }
 
@@ -59,12 +59,12 @@ func encodeKey(key *rsa.PrivateKey, filename string) {
 func decodeKey(filename string) *rsa.PrivateKey {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
-		log.Fatalf("could not read file %s: %v", filename, err)
+		log.Panicf("could not read file %s: %v", filename, err)
 	}
 	block, _ := pem.Decode(data)
 	key, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
-		log.Fatalf("could not parse key: %v", err)
+		log.Panicf("could not parse key: %v", err)
 	}
 	return key
 }
